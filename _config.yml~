@@ -3,11 +3,11 @@
 # ----------------------- #
 
 url: http://Chienlung.github.com
-title: 陆彦帑的Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+title: 陆彦帑的博客
+subtitle: 宗介波妞手拉手
+author: 陆彦帑
 simple_search: http://google.com/search
-description:
+description:愿我如星君如月，夜夜流光相皎洁
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -19,7 +19,7 @@ date_format: "ordinal"
 subscribe_rss: /atom.xml
 subscribe_email:
 # RSS feeds can list your email address if you like
-email:
+email:chienlungcheung@gmail.com
 
 # ----------------------- #
 #    Jekyll & Plugins     #
