@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "通过github和octopress搭建Blog详细步骤以及通过Octopress写博客的步骤"
-date: 2012-12-16 21:31
+date: 2012-12-16 21:39
 comments: true
 categories: 
 ---
