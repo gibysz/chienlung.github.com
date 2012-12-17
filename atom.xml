@@ -1,101 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>Chienlung's Blog</title>
-  <meta name="author" content="Chienlung">
-
-  
-  <meta name="description" content="ARP欺骗是用处很大的一个技术，我们的路由器整天在欺骗我们的PC，没有这个欺骗我们就不能上网。 先稍微说下我们每天经历的ARP欺骗，比如早上开路由器开PC，我们上Google，PC在发送IP包之前（假设Google的IP为173.194.72.94， &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://Chienlung.github.com/">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="/atom.xml" rel="alternate" title="Chienlung's Blog" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
-  
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">Chienlung's Blog</a></h1>
-  
-    <h2>宗介波妞手拉手，宗介永远爱波妞。</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:Chienlung.github.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
+  <title><![CDATA[Chienlung's Blog]]></title>
+  <link href="http://Chienlung.github.com/atom.xml" rel="self"/>
+  <link href="http://Chienlung.github.com/"/>
+  <updated>2012-12-17T22:23:08+08:00</updated>
+  <id>http://Chienlung.github.com/</id>
+  <author>
+    <name><![CDATA[Chienlung]]></name>
     
-      <h1 class="entry-title"><a href="/blog/2012/12/17/arpqi-pian-de-shi-xian/">ARP欺骗的实现</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
   
-
-
-<time datetime="2012-12-17T22:06:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/12/17/arpqi-pian-de-shi-xian/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ARP欺骗是用处很大的一个技术，我们的路由器整天在欺骗我们的PC，没有这个欺骗我们就不能上网。</p>
+  <entry>
+    <title type="html"><![CDATA[ARP欺骗的实现]]></title>
+    <link href="http://Chienlung.github.com/blog/2012/12/17/arpqi-pian-de-shi-xian/"/>
+    <updated>2012-12-17T22:06:00+08:00</updated>
+    <id>http://Chienlung.github.com/blog/2012/12/17/arpqi-pian-de-shi-xian</id>
+    <content type="html"><![CDATA[<p>ARP欺骗是用处很大的一个技术，我们的路由器整天在欺骗我们的PC，没有这个欺骗我们就不能上网。</p>
 
 <p>先稍微说下我们每天经历的ARP欺骗，比如早上开路由器开PC，我们上Google，PC在发送IP包之前（假设Google的IP为173.194.72.94，当然事先要先通过DNS服务器获取Google的IP，这个不多谈）要先这个IP包装配为以太网帧，所以PC必须要知道Google服务器端MAC，才能填充好以太网帧。要想知道Google的MAC地址，我们的PC就要发送ARP广播请求，跟你一个局域网里的所有以太网设备都能收到这个请求，你希望有人告诉自己与173.194.72.94匹配的MAC地址是多少，因为我们的PC跟Google的服务器不在一个局域网里，所以Google服务器没法收到你的ARP请求，但是如果这个局域网中有其他PC知道的话，它收到这个请求就会给你发送ARP应答告诉你，如果没人知道怎么办？只能靠骗了！这个骗子就是路由器，这也是它的一个职责。路由器用自己的MAC地址冒充Google服务器的MAC地址，给你发ARP应答糊弄你，你收到应答后喜得不行，然后把所有帧都发给了路由器。下面我们就看路由器时怎么欺骗你的。</p>
 
@@ -151,44 +74,15 @@
 
 <p>然后你就可以上Google了。
 然后大家一起来拍砖！</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/17/dui-kosarajusuan-fa-de-li-jie-si-lu/">对kosaraju算法的理解思路</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-17T21:51:00+08:00" pubdate data-updated="true">Dec 17<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/12/17/dui-kosarajusuan-fa-de-li-jie-si-lu/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>这个算法网上很多介绍，但大多都很相似，着重介绍算法实现而没有证明或者容易理解的解释。我说下自己对kosaraju算法的理解思路。这个算法名字我不会读，搜了半天看到本尊，发现他长得像印度人，也就释然了。回正题。kosaraju算法用来求一个有向图的所有强连通分量，算法很简单，但是理解起来有点麻烦，我是这么觉得。但是跟无向图的连通分量求法结合起来，就非常容易理解了。所以理解这个Korasaju算法的前提是你理解无向图所有连通分量的算法，这个算法相当图森破。
+  <entry>
+    <title type="html"><![CDATA[对kosaraju算法的理解思路]]></title>
+    <link href="http://Chienlung.github.com/blog/2012/12/17/dui-kosarajusuan-fa-de-li-jie-si-lu/"/>
+    <updated>2012-12-17T21:51:00+08:00</updated>
+    <id>http://Chienlung.github.com/blog/2012/12/17/dui-kosarajusuan-fa-de-li-jie-si-lu</id>
+    <content type="html"><![CDATA[<p>这个算法网上很多介绍，但大多都很相似，着重介绍算法实现而没有证明或者容易理解的解释。我说下自己对kosaraju算法的理解思路。这个算法名字我不会读，搜了半天看到本尊，发现他长得像印度人，也就释然了。回正题。kosaraju算法用来求一个有向图的所有强连通分量，算法很简单，但是理解起来有点麻烦，我是这么觉得。但是跟无向图的连通分量求法结合起来，就非常容易理解了。所以理解这个Korasaju算法的前提是你理解无向图所有连通分量的算法，这个算法相当图森破。
 先看无向图的连通分量求法，其实无向图的连通分量就都是强连通分量。无向图的强连通分量就是用DFS算法顺序遍历邻接表时顺道干点小动作，写下代码更直观一些：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -275,44 +169,15 @@
 
 
 
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/16/tong-guo-githubhe-octopressda-jian-blogxiang-xi-bu-zou-yi-ji-tong-guo-octopressxie-bo-ke-de-bu-zou/">通过github和octopress搭建Blog详细步骤以及通过Octopress写博客的步骤</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-16T21:39:00+08:00" pubdate data-updated="true">Dec 16<span>th</span>, 2012</time>
-        
-         | <a href="/blog/2012/12/16/tong-guo-githubhe-octopressda-jian-blogxiang-xi-bu-zou-yi-ji-tong-guo-octopressxie-bo-ke-de-bu-zou/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>这篇文章是为像我一样的不懂ruby、不懂git的newbie写的，大牛请绕路。</p>
+  <entry>
+    <title type="html"><![CDATA[通过github和octopress搭建Blog详细步骤以及通过Octopress写博客的步骤]]></title>
+    <link href="http://Chienlung.github.com/blog/2012/12/16/tong-guo-githubhe-octopressda-jian-blogxiang-xi-bu-zou-yi-ji-tong-guo-octopressxie-bo-ke-de-bu-zou/"/>
+    <updated>2012-12-16T21:39:00+08:00</updated>
+    <id>http://Chienlung.github.com/blog/2012/12/16/tong-guo-githubhe-octopressda-jian-blogxiang-xi-bu-zou-yi-ji-tong-guo-octopressxie-bo-ke-de-bu-zou</id>
+    <content type="html"><![CDATA[<p>这篇文章是为像我一样的不懂ruby、不懂git的newbie写的，大牛请绕路。</p>
 
 <p>开始之前先说点题外话，这几天对于我这个newbie来说是痛苦的，上段时间开始对Python极其感兴趣，自己又很喜欢豆瓣，所以想用豆瓣的API做点什么，于是为了获取Python版本的API，所以注册了github，但是我真的对这个网站毫无概念，就觉得跟网盘差不多，因为我相当孤陋寡闻，对于Linus开发的git听都没听过，我觉得自己简直弱爆了。这次通过搭建这个Blog，觉得github真的好酷！</p>
 
@@ -504,76 +369,7 @@ description: 愿我如星君如月，夜夜流光相皎洁。
 <p>比如我这篇文章的文件名字叫<code>通过github和octopress搭建Blog步骤以及容易出错的地方</code>，它在home/octopress/source/posts目录下，而在这里的名字却是<code>2012-12-16-tong-guo-github-he-octopressda-jian-blogbu-zou-yi-ji-rong-yi-chu-cuo-de-di-fang.markdown</code>，看这个名字是不是很碉堡，注意后缀自动设置为了markdown。
 好了，写了好几个小时，octopress真是个很合程序员口味的博客，这篇博客我就是在VIM中用Markdown写的。给你markdown语法的<a href="http://daringfireball.net/projects/markdown/syntax">英文版地址</a>和<a href="http://wowubuntu.com/markdown/">中文简体版地址</a>以及<a href="http://markdown.tw/">中文繁体版地址</a>。
 看语法文档的时候如果能一边看一边练习就好了，当然很好了，所以再提供一个<a href="http://www.ctrlshift.net/project/markdowneditor/">Markdown在线编辑网站</a>。</p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>最新评论</h1>
-  <script type="text/javascript" src="http://chienlung.disqus.com/recent_comments_widget.js?num_items=5&hide_avatars=0&avatar_size=32&excerpt_length=200"></script>
-</section>
-
-
-
-
-
-
-  
-</aside>
-
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Chienlung -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-</footer>
-  
-
-<script type="text/javascript">
-      var disqus_shortname = 'Chienlung';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
-
-
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
-</html>
+</feed>
